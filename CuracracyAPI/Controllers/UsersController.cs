@@ -122,7 +122,10 @@ namespace CuracracyAPI.Controllers {
 			try {
 				using (var db = new CuracracyAPI.Models.CuracracyContext()) {
 					// Get all of our tokens.
-					var tokens = from t in db.AuthenticatedSessions where t.userid == userId select t;
+					var tokenQuery = from t in db.AuthenticatedSessions where t.userid == userId select t;
+					
+					// Run the query and extract a list.
+					var tokens = tokenQuery.ToList();
 					
 					// Validate the token.
 					foreach (var t in tokens) {
