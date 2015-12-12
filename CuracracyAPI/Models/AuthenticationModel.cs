@@ -36,4 +36,15 @@ namespace CuracracyAPI.Models {
 		
 		public virtual UserMeta user {get; set;}
 	}
+	
+	public class LoginResponse {
+		public LoginResponse(AuthenticatedSession session, bool valid) {
+			this.token = session.sessionId;
+			this.userid = session.user.id;
+		}
+		
+		public string token {get; set;}
+		
+		public int userid {get; set;}
+	}
 }

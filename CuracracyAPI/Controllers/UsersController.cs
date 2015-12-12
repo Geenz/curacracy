@@ -19,7 +19,7 @@ namespace CuracracyAPI.Controllers {
 		[Route("register")]
 		[Produces("application/json")]
 		[HttpPost]
-		public async Task<IActionResult> Register([FromForm]string username, [FromForm] string email, [FromForm] string password, [FromForm] string birthdate) {
+		public async Task<GenericReponse> Register([FromForm]string username, [FromForm] string email, [FromForm] string password, [FromForm] string birthdate) {
 			string errorMessage = "";
 			try {
 				using (var db = new CuracracyContext()) {
@@ -47,7 +47,7 @@ namespace CuracracyAPI.Controllers {
 						
 						await db.SaveChangesAsync();
 						
-						return Json(new {success = true, message = "Successfully created user."});
+						return new GenericReponse(true, "Successfully created user.");
 					} else {
 						throw new Exception("ERROR: A user using this email already exists!");
 					}
@@ -55,12 +55,12 @@ namespace CuracracyAPI.Controllers {
 			} catch (Exception e) {
 				errorMessage = e.ToString();
 			}
-			return Json(new {success = false, message = errorMessage});
+			return new GenericReponse(false, errorMessage);
 		}
 			
 		[Route("login")]
 		[HttpPost]
-		public IActionResult Login([FromForm]string email, [FromForm]string password, [FromForm]bool rememberMe) {
+		public LoginResponse Login([FromForm]string email, [FromForm]string password, [FromForm]bool rememberMe) {
 			string errorMessage = "";
 			try {
 				// Note: passwords are transmitted as plain text via SSL.  We do this primarily for noscript users.
@@ -78,8 +78,8 @@ namespace CuracracyAPI.Controllers {
 						if (valid) {
 							// If everything is good, issue a session token.
 							string sessionToken = BCrypt.Net.BCrypt.HashString(email + DateTime.Now.ToString());
-							
-							db.Add(new AuthenticatedSession {user = au.user, sessionId = sessionToken, expirationDate = (rememberMe) ? DateTime.Today.Add(new TimeSpan(30, 0, 0, 0)) : DateTime.Today.Add( new TimeSpan(1, 0, 0, 0))});
+							AuthenticatedSession session = new AuthenticatedSession {user = au.user, sessionId = sessionToken, expirationDate = (rememberMe) ? DateTime.Today.Add(new TimeSpan(30, 0, 0, 0)) : DateTime.Today.Add( new TimeSpan(1, 0, 0, 0))}; 
+							db.Add(session);
 							
 							// We try to do a little house cleaning here for any expired tokens between logins.
 							var tokens = db.AuthenticatedSessions.Where(t=> t.user.id == au.user.id).Include(u=> u.user);
@@ -92,7 +92,7 @@ namespace CuracracyAPI.Controllers {
 							
 							db.SaveChanges();
 							
-							return Json(new {success = true, message = "Login successful.", sessionId = sessionToken, userId = au.user.id});
+							return new LoginResponse(session, true);
 						} else {
 							throw new Exception("Password is incorrect!");
 						}
@@ -105,13 +105,13 @@ namespace CuracracyAPI.Controllers {
 				errorMessage = e.ToString();
 			}
 			
-			return Json(new {success = false, message = errorMessage});
+			return new LoginResponse(null, false);
 		}
 		
 		// TODO: Make token validation internal with no public API outside of supplying a token in a post request.
 		[Route("validateToken")]
 		[HttpPost]
-		public IActionResult ValidateSessionToken([FromForm]string token, [FromForm]int userId) {
+		public bool ValidateSessionToken([FromForm]string token, [FromForm]int userId) {
 			string errorMessage = "";
 			try {
 				using (var db = new CuracracyContext()) {
@@ -137,7 +137,7 @@ namespace CuracracyAPI.Controllers {
 							// Success!  The token is valid.
 							if (t.sessionId == token) {
 								db.SaveChanges();
-								return Json(new { success = true, message = "Token validation successful." });
+								return true;
 							}
 						}
 						
@@ -150,12 +150,12 @@ namespace CuracracyAPI.Controllers {
 				errorMessage = e.ToString();
 			}
 			
-			return Json(new { success =  false, message = errorMessage });
+			return false;
 		}
 		
 		[Route("{id}")]
 		[HttpGet]
-		public IActionResult GetUser(int id, [FromForm]string token) {
+		public UserResponse GetUser(int id, [FromForm]string token) {
 			string errorMessage = "";
 			try {
 				using (var db = new CuracracyContext()) {
@@ -164,18 +164,7 @@ namespace CuracracyAPI.Controllers {
 					UserMeta user = userQuery.First();
 					
 					if (user != null) {
-						return Json(new {
-							success = true,
-							user = new {
-								name = user.userName,
-								rank = user.rank,
-								registered = user.registrationDate,
-								description = user.userdata.description,
-								favoritesFolder = user.userdata.galleryFolder.children.ElementAt(0), // Eventually these folder entries should probably list the x most recent entries instead of folder metadata.
-								submissionsFolder = user.userdata.galleryFolder.children.ElementAt(1),
-								shoutThread = user.userdata.shoutsThreadId
-							}
-						});
+						return new UserResponse(user);
 					} else {
 						throw new Exception("User not found!");
 					}
@@ -183,7 +172,7 @@ namespace CuracracyAPI.Controllers {
 			} catch (Exception e) {
 				errorMessage = e.ToString();
 			}
-			return Json(new { success = false, message = errorMessage});
+			return null;
 		}
 	}
 }
