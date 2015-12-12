@@ -207,3 +207,7 @@ FakesAssemblies/
 
 # OS X Ignores
 .DS_Store
+
+# EF-related ignores
+Migrations/
+*.db
