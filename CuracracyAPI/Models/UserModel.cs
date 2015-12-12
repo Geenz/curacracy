@@ -12,15 +12,16 @@ namespace CuracracyAPI.Models {
 		
 		public string userName {get; set;}
 		
-		public string email {get; set;}
-		
 		public int rank {get; set;}
+		
+		public virtual User userdata {get; set;}
 	}
 	
 	public class User {
-		public int userId {get; set;}
+		public int id {get; set;}
+		public virtual UserMeta metadata {get; set;}
 		
-		public long galleryFolderId {get; set;}
+		public Folder galleryFolder {get; set;}
 		
 		public long shoutsThreadId {get; set;}
 		

@@ -9,9 +9,9 @@ namespace CuracracyAPI.Models {
 		
 		public string sessionId { get; set;}
 		
-		public int userid {get; set;}
-		
 		public DateTime expirationDate {get; set;}
+		
+		public virtual UserMeta user {get; set;}
 	}
 	
 	public class AuthenticatedUser {
@@ -31,5 +31,9 @@ namespace CuracracyAPI.Models {
 		private string _password;
 		
 		public string hashMethod {get; set;}
+		
+		public string email {get; set;}
+		
+		public virtual UserMeta user {get; set;}
 	}
 }

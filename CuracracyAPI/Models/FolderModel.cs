@@ -7,9 +7,10 @@ using Microsoft.Data.Entity;
 namespace CuracracyAPI.Models {
 	public class Folder {
 		public long id {get; set;}
-		public long parentId {get; set;}
 		public int permissions {get; set;}
 		public string name {get; set;}
+		
+		public virtual ICollection<Folder> children {get; set;}
 	}
 	
 	public class FolderEntry {
