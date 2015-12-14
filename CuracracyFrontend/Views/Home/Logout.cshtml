@@ -1,0 +1,37 @@
+@{
+    ViewData["Title"] = "Logout";
+}
+<section id="login">
+    <div class="container">
+        <div class="row">
+            <div class="col-xs-12">
+                @{
+                    <!--Check if we're logged in already.-->
+                    if(((bool)ViewData["LoggedIn"]) == false) {
+                        <!--If not, create our login form.-->
+                        <div class="panel panel-danger">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Alert</h3>
+                            </div>
+                            <div class="panel-body">
+                                You have not logged in.  Click 'login' to login.
+                            </div>
+                        </div>
+                    } else {
+                        <!--If we are, verify to the user that they have been logged out.-->
+                        <div class="panel panel-danger">
+                            <div class="panel-heading">
+                                <h3 class="panel-title">Alert</h3>
+                            </div>
+                            <div class="panel-body">
+                                You have been logged out.  Click 'Login' to login.
+                            </div>
+                        </div>
+                    }
+                }
+            </div> <!-- /.col-xs-12 -->
+        </div> <!-- /.row -->
+    </div> <!-- /.container -->
+</section>
+
+<script src="~/js/login.js"></script>

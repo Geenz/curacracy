@@ -91,13 +91,15 @@ namespace CuracracyAPI.Controllers {
 							}
 							
 							db.SaveChanges();
-							
+							HttpContext.Response.StatusCode = 200;
 							return new LoginResponse(session, true);
 						} else {
+							HttpContext.Response.StatusCode = 401;
 							throw new Exception("Password is incorrect!");
 						}
 						
 					} else {
+						HttpContext.Response.StatusCode = 401;
 						throw new Exception("User does not exist!");
 					}
 				}
@@ -116,7 +118,6 @@ namespace CuracracyAPI.Controllers {
 			string errorMessage = "";
 			try {
 				using (var db = new CuracracyContext()) {
-					Console.WriteLine("{0}, {1}", userId.ToString(), token);
 					// Get all of our tokens.
 					var tokenQuery = db.AuthenticatedSessions.Where(t=> t.user.id == userId && t.sessionId == token);
 					
@@ -131,17 +132,42 @@ namespace CuracracyAPI.Controllers {
 							db.Remove(t);
 						} else {
 							// Success!  The token is valid.
-							Console.WriteLine("Comparing {0} and {1}", t.sessionId, token);
 							db.SaveChanges();
+							HttpContext.Response.StatusCode = 200;
 							return new ValidationResponse(true, "");
 						}
-						
-						
 					}
+					// We should only get to this point if the database didn't return any results.
 					
 					// Make sure any house cleaning is committed to the database.
 					db.SaveChanges();
+					HttpContext.Response.StatusCode = 401;
 					throw new Exception("Token not found!");
+				}
+			} catch (Exception e) {
+				errorMessage = e.ToString();
+			}
+			
+			return new ValidationResponse(false, errorMessage);
+		}
+		
+		[RouteAttribute("invalidateToken")]
+		[HttpPost]
+		public ValidationResponse InvalidateSessionToken([FromForm]string token, [FromForm]int userId) {
+			token = token.Trim(' ');
+			string errorMessage = "";
+			try {
+				using (var db = new CuracracyContext()) {
+					var tokenQuery = db.AuthenticatedSessions.Where(t=> t.user.id == userId && t.sessionId == token);
+					
+					var tokens = tokenQuery.ToList();
+					
+					foreach (var t in tokens) {
+						db.Remove(t);
+					}
+					
+					db.SaveChanges();
+					return new ValidationResponse(true, "Token successfully invalidated.");
 				}
 			} catch (Exception e) {
 				errorMessage = e.ToString();
