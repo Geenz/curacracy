@@ -47,4 +47,15 @@ namespace CuracracyAPI.Models {
 		
 		public int userid {get; set;}
 	}
+	
+	public class ValidationResponse {
+		public ValidationResponse(bool validated, string reason) {
+			this.validated = validated;
+			this.reason = reason;
+		}
+		
+		public bool validated {get; set;}
+		
+		public string reason {get; set;}
+	}
 }

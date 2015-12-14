@@ -6,6 +6,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
+using Microsoft.AspNet.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -29,6 +30,10 @@ namespace CuracracyFrontend
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
+            services.AddCaching();
+            services.AddSession(options => {
+                options.CookieName = ".Curacracy.Main.Session";
+            });
             services.AddMvc();
         }
 
@@ -50,6 +55,8 @@ namespace CuracracyFrontend
             app.UseIISPlatformHandler();
 
             app.UseStaticFiles();
+            
+            app.UseSession();
 
             app.UseMvc(routes =>
             {

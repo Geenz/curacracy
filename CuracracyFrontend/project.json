@@ -15,15 +15,19 @@
     "Microsoft.AspNet.Server.Kestrel": "1.0.0-rc1-final",
     "Microsoft.AspNet.StaticFiles": "1.0.0-rc1-final",
     "Microsoft.AspNet.Tooling.Razor": "1.0.0-rc1-final",
+    "Microsoft.AspNet.Session": "1.0.0-rc1-final",
+    "Microsoft.Extensions.Caching.Memory": "1.0.0-rc1-final",
     "Microsoft.Extensions.Configuration.FileProviderExtensions" : "1.0.0-rc1-final",
     "Microsoft.Extensions.Configuration.Json": "1.0.0-rc1-final",
     "Microsoft.Extensions.Logging": "1.0.0-rc1-final",
     "Microsoft.Extensions.Logging.Console": "1.0.0-rc1-final",
-    "Microsoft.Extensions.Logging.Debug": "1.0.0-rc1-final"
+    "Microsoft.Extensions.Logging.Debug": "1.0.0-rc1-final",
+    "System.Net.Http": "4.0.0-*",
+    "Newtonsoft.Json": "8.0.1-*"
   },
 
   "commands": {
-    "web": "Microsoft.AspNet.Server.Kestrel --server.url https://localhost:8080"
+    "web": "Microsoft.AspNet.Server.Kestrel --server.urls http://localhost:8080"
   },
 
   "frameworks": {

@@ -111,12 +111,14 @@ namespace CuracracyAPI.Controllers {
 		// TODO: Make token validation internal with no public API outside of supplying a token in a post request.
 		[Route("validateToken")]
 		[HttpPost]
-		public bool ValidateSessionToken([FromForm]string token, [FromForm]int userId) {
+		public ValidationResponse ValidateSessionToken([FromForm]string token, [FromForm]int userId) {
+			token = token.Trim(' ');
 			string errorMessage = "";
 			try {
 				using (var db = new CuracracyContext()) {
+					Console.WriteLine("{0}, {1}", userId.ToString(), token);
 					// Get all of our tokens.
-					var tokenQuery = db.AuthenticatedSessions.Where(t=> t.user.id == userId);
+					var tokenQuery = db.AuthenticatedSessions.Where(t=> t.user.id == userId && t.sessionId == token);
 					
 					// Run the query and extract a list.
 					var tokens = tokenQuery.ToList();
@@ -127,30 +129,25 @@ namespace CuracracyAPI.Controllers {
 						if (t.expirationDate < DateTime.Today) {
 							// If the token we are presently checking is expired, remove it from the database.
 							db.Remove(t);
-							
-							// If the token being validated is expired, boot the user out.
-							if (t.sessionId == token) {
-								db.SaveChanges();
-								throw new Exception("Token expired!");
-							}
 						} else {
 							// Success!  The token is valid.
-							if (t.sessionId == token) {
-								db.SaveChanges();
-								return true;
-							}
+							Console.WriteLine("Comparing {0} and {1}", t.sessionId, token);
+							db.SaveChanges();
+							return new ValidationResponse(true, "");
 						}
 						
-						// Make sure any house cleaning is committed to the database.
-						db.SaveChanges();
-						throw new Exception("Token not found!");
+						
 					}
+					
+					// Make sure any house cleaning is committed to the database.
+					db.SaveChanges();
+					throw new Exception("Token not found!");
 				}
 			} catch (Exception e) {
 				errorMessage = e.ToString();
 			}
 			
-			return false;
+			return new ValidationResponse(false, errorMessage);
 		}
 		
 		[Route("{id}")]
