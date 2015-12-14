@@ -38,9 +38,12 @@ namespace CuracracyAPI.Models {
 	}
 	
 	public class LoginResponse {
-		public LoginResponse(AuthenticatedSession session, bool valid) {
-			this.token = session.sessionId;
-			this.userid = session.user.id;
+		public LoginResponse(AuthenticatedSession session) {
+			if (session != null) {
+				// We basically handle null as a failure case.  Something went wrong.
+				this.token = session.sessionId;
+				this.userid = session.user.id;
+			}
 		}
 		
 		public string token {get; set;}

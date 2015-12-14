@@ -61,8 +61,10 @@ namespace CuracracyAPI.Controllers {
 			try {
 				// Note: passwords are transmitted as plain text via SSL.  We do this primarily for noscript users.
 				using (var db = new CuracracyContext()) {
+					// Construct our query.
 					var user = db.AuthenticatedUsers.Where(x=> x.email == email).Include(u=> u.user);
-					// Get the UserMeta from our query.
+					
+					// Get the first user that gets returned (there shouldn't be any others anyways)
 					AuthenticatedUser au = user.First();
 					
 					// If the user exists, continue with validation.
@@ -88,7 +90,7 @@ namespace CuracracyAPI.Controllers {
 							
 							db.SaveChanges();
 							HttpContext.Response.StatusCode = 200;
-							return new LoginResponse(session, true);
+							return new LoginResponse(session);
 						} else {
 							HttpContext.Response.StatusCode = 401;
 							throw new Exception("Password is incorrect!");
@@ -103,7 +105,9 @@ namespace CuracracyAPI.Controllers {
 				errorMessage = e.ToString();
 			}
 			
-			return new LoginResponse(null, false);
+			HttpContext.Response.StatusCode = 401;
+			
+			return null;
 		}
 		
 		// TODO: Make token validation internal with no public API outside of supplying a token in a post request.
