@@ -59,7 +59,7 @@ namespace CuracracyFrontend.Controllers
                         formValues.Add(new KeyValuePair<string, string>("userId", userID.ToString()));
                         formValues.Add(new KeyValuePair<string, string>("token", userSession.ToString()));
                         
-                        var response = await client.PostAsync("http://localhost:5000/api/v1/user/validateToken", new FormUrlEncodedContent(formValues));
+                        var response = await client.PostAsync("http://localhost:5000/api/v1/authentication/validateToken", new FormUrlEncodedContent(formValues));
                         Stream receiveStream = await response.Content.ReadAsStreamAsync();
                         StreamReader readStream = new StreamReader (receiveStream, Encoding.UTF8);
                         
@@ -75,11 +75,11 @@ namespace CuracracyFrontend.Controllers
         
         public async Task<IActionResult> Logout() {
             // Session shouldn't be null, but just in case there's a case that I can't think of..
-            if (HttpContext.Session != null) {
+            if ((await LoggedIn()).validated) {
                 var userID = HttpContext.Session.GetInt32("userid");
                 var userSession = HttpContext.Session.GetString("token");
                 
-                // If userID and userSession are present, validate the session token.
+                // If userID and userSession are present, invalidate the session token.
                 if (userID != null && userSession != null) {
                     using (var client = new HttpClient()) {
                         client.DefaultRequestHeaders.Accept.Clear();
@@ -89,7 +89,7 @@ namespace CuracracyFrontend.Controllers
                         formValues.Add(new KeyValuePair<string, string>("userId", userID.ToString()));
                         formValues.Add(new KeyValuePair<string, string>("token", userSession.ToString()));
                         
-                        var response = await client.PostAsync("http://localhost:5000/api/v1/user/invalidateToken", new FormUrlEncodedContent(formValues));
+                        var response = await client.PostAsync("http://localhost:5000/api/v1/authentication/invalidateToken", new FormUrlEncodedContent(formValues));
                         Stream receiveStream = await response.Content.ReadAsStreamAsync();
                         StreamReader readStream = new StreamReader (receiveStream, Encoding.UTF8);
                         
@@ -105,6 +105,8 @@ namespace CuracracyFrontend.Controllers
                 } else {
                     ViewData["LoggedIn"] = false;
                 }
+            } else {
+                ViewData["LoggedIn"] = false;
             }
             
             return View();
@@ -128,7 +130,7 @@ namespace CuracracyFrontend.Controllers
                 formValues.Add(new KeyValuePair<string, string>("password", password));
                 formValues.Add(new KeyValuePair<string, string>("rememberMe", "false"));
                 
-                var response = await client.PostAsync("http://localhost:5000/api/v1/user/login", new FormUrlEncodedContent(formValues));
+                var response = await client.PostAsync("http://localhost:5000/api/v1/authentication/login", new FormUrlEncodedContent(formValues));
                 
                 if (response.IsSuccessStatusCode) {
                     Stream receiveStream = await response.Content.ReadAsStreamAsync();
