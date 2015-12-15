@@ -8,7 +8,7 @@ Curacracy is a new kind of art website where content creators and users have the
 * CoreCLR (Sorry Mono users)
 * MVC 6
 * EntityFramework 7
-* Any CoreCLR supported OS
+* Any CoreCLR supported OS (Yes, even OS X and Linux!)
 
 ## Project Breakdown
 
