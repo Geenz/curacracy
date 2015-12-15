@@ -1,0 +1,11 @@
+@using CuracracyAPI.Models;
+
+<div class="user-container">
+	<ul class="list-group">
+		@foreach (var user in ((ICollection<UserMeta>)ViewData["Users"])) {
+			<li class="list-group-item">
+				@user.userName
+			</li>
+		}
+	</ul>
+</div>

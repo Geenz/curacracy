@@ -10,16 +10,20 @@ using System.Net.Http.Headers;
 using System.Text;
 using System.IO;
 using Newtonsoft.Json;
+using CuracracyAPI.Models;
+using CuracracyAPI.Client;
 
 namespace CuracracyFrontend.Controllers
 {
+    [Route("user")]
     public class UserController : BaseController
     {
-        public async Task<IActionResult> Index()
-        {
+        [Route("page/{pageNumber:int=0}")]
+        public async Task<IActionResult> Index(int pageNumber) {
             var log = await LoggedIn();
             ViewData["LoggedIn"] = log.validated;
-            ViewData["Users"] = CuracracyAPI.Client.User.GetPage(0);
+            var users = await CuracracyAPI.Client.User.GetUsers(pageNumber);
+            ViewData["Users"] = users;
             return View();
         }
     }

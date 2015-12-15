@@ -24,7 +24,7 @@
     "Microsoft.Extensions.Logging.Debug": "1.0.0-rc1-final",
     "System.Net.Http": "4.0.1-*",
     "Newtonsoft.Json": "8.0.1-*",
-    "CuracracyCommon": "1.0.0-alpha1"
+    "CuracracyCommon": "1.0.0-alpha2"
   },
 
   "commands": {
