@@ -32,6 +32,7 @@
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li>@if((bool)ViewData["LoggedIn"] == false) { <a asp-controller="Auth" asp-action="Login">Login</a> } else { <a asp-controller="Auth" asp-action="Logout">Logout</a> }</li>
+                        @if((bool)ViewData["LoggedIn"] == false) {<li><a asp-controller="Auth" asp-action="Register">Register</a></li>}
                         <li><a asp-controller="Home" asp-action="Index">Home</a></li>
                         <li><a asp-controller="Home" asp-action="About">About</a></li>
                         <li><a asp-controller="Home" asp-action="Contact">Contact</a></li>

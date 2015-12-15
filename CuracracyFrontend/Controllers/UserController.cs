@@ -19,6 +19,7 @@ namespace CuracracyFrontend.Controllers
         {
             var log = await LoggedIn();
             ViewData["LoggedIn"] = log.validated;
+            ViewData["Users"] = CuracracyAPI.Client.User.GetPage(0);
             return View();
         }
     }

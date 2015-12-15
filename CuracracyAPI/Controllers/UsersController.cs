@@ -42,6 +42,38 @@ namespace CuracracyAPI.Controllers {
 			return null;
 		}
 		
+		[Route("page/{id}")]
+		[HttpPost]
+		public IEnumerable<UserMeta> GetPage(int id, [FromForm]int count) {
+			string errorMessage = "";
+			try {
+				using (var db = new CuracracyContext()) {
+					
+					var userQuery = db.UserMetadata.Skip(id * count).Take(count);
+					
+					// Execute the query.
+					var userMetadata = userQuery.ToList();
+					
+					if (userMetadata.Any()) {
+						// This endpoint works in pages, so return 206 if we have anything.
+						HttpContext.Response.StatusCode = 206;
+						HttpContext.Response.Headers["Content-Range"] = (id * count).ToString() + "-" + (id * count + userMetadata.Count()).ToString();
+					} else {
+						// We don't have any results.  Return 204.
+						HttpContext.Response.StatusCode = 204;
+						return null;
+					}
+
+					return userMetadata;
+				}
+			} catch (Exception e) {
+				errorMessage = e.ToString();
+			}
+			
+			HttpContext.Response.StatusCode = 500;
+			return null;
+		}
+		
 		[Route("{id}")]
 		[HttpGet]
 		public UserResponse GetUser(int id) {

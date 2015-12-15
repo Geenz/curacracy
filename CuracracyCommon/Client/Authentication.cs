@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 using CuracracyAPI.Models;
 
 namespace CuracracyAPI.Client {
-    public class Authentication {
+    public class Authentication : ClientBase {
         public static async Task<LoginResponse> LoginRequest(string email, string password, bool rememberMe) {
             using (var client = new HttpClient()) {
                 client.DefaultRequestHeaders.Accept.Clear();
@@ -21,7 +21,7 @@ namespace CuracracyAPI.Client {
                 formValues.Add(new KeyValuePair<string, string>("password", password));
                 formValues.Add(new KeyValuePair<string, string>("rememberMe", rememberMe.ToString()));
                 
-                var response = await client.PostAsync("http://localhost:5000/api/v1/authentication/login", new FormUrlEncodedContent(formValues));
+                var response = await client.PostAsync(BASE_URI + "api/v1/authentication/login", new FormUrlEncodedContent(formValues));
                 
                 if (response.IsSuccessStatusCode) {
                     Stream receiveStream = await response.Content.ReadAsStreamAsync();
@@ -44,7 +44,7 @@ namespace CuracracyAPI.Client {
                     formValues.Add(new KeyValuePair<string, string>("token", token));
                     
                     
-                    var response = await client.PostAsync("http://localhost:5000/api/v1/authentication/validateToken", new FormUrlEncodedContent(formValues));
+                    var response = await client.PostAsync(BASE_URI + "api/v1/authentication/validateToken", new FormUrlEncodedContent(formValues));
                     
                     if (response.IsSuccessStatusCode) {
                         Stream receiveStream = await response.Content.ReadAsStreamAsync();
@@ -66,7 +66,7 @@ namespace CuracracyAPI.Client {
                 formValues.Add(new KeyValuePair<string, string>("userId", userid.ToString()));
                 formValues.Add(new KeyValuePair<string, string>("token", token));
                 
-                var response = await client.PostAsync("http://localhost:5000/api/v1/authentication/invalidateToken", new FormUrlEncodedContent(formValues));
+                var response = await client.PostAsync(BASE_URI + "api/v1/authentication/invalidateToken", new FormUrlEncodedContent(formValues));
                 
                 if (response.IsSuccessStatusCode) {
                     Stream receiveStream = await response.Content.ReadAsStreamAsync();
@@ -89,7 +89,7 @@ namespace CuracracyAPI.Client {
                 formValues.Add(new KeyValuePair<string, string>("password", password));
                 formValues.Add(new KeyValuePair<string, string>("birthdate", birthdate.ToString()));
                 
-                var response = await client.PostAsync("http://localhost:5000/api/v1/authentication/register", new FormUrlEncodedContent(formValues));
+                var response = await client.PostAsync(BASE_URI + "api/v1/authentication/register", new FormUrlEncodedContent(formValues));
                 
                 if (response.IsSuccessStatusCode) {
                     Stream receiveStream = await response.Content.ReadAsStreamAsync();
