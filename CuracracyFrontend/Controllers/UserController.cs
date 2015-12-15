@@ -34,7 +34,9 @@ namespace CuracracyFrontend.Controllers
                 user = await CuracracyAPI.Client.User.GetUser(id);
             }
             
-            ViewData["Username"] = user.username;
+            user.description = "My awesome Curacracy account!";
+            
+            ViewData["Userdata"] = user;
             return View();
         }
         

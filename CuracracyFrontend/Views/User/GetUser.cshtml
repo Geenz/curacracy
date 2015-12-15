@@ -1,5 +1,21 @@
 @using CuracracyAPI.Models;
-
+@{var user = (UserResponse)ViewData["Userdata"];
 <div class="user-container">
-	<h1>@ViewData["Username"]</h1>
+	<h1>@user.username</h1>
+	<p>@user.description</p>
+	<table>
+		<tr>
+			<td><h2>@user.rootFolders.ElementAt(0).name</h2></td>
+			<td><h2>@user.rootFolders.ElementAt(1).name</h2></td>
+		</tr>
+		<tr>
+			<td><p>Eventually there would be some favorites here.</p></td>
+			<td><p>Eventually there would be some submissions here.</p></td>
+	</table>
+	<h2>Geenz's Journal</h2>
+	<div id="journal">
+		<p>Blah blah blah, this should really be driven by a submission model at some point.  Blah blah.  Dah dah dah.</p>
+		<p>203023802 Comments</p>
+	</div>
 </div>
+}
