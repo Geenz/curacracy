@@ -24,3 +24,7 @@ Curacracy is a new kind of art website where content creators and users have the
 Building is simple.  From CuracracyAPI and CuracracyFrontend, simply run `dnu restore` then `dnx web`.  Note that for CuracracyAPI an additional step is required before running `dnx web`: you must run `dnx ef migrations add MyFirstMigration` then `dnx ef database update`.
 
 The API uses Sqlite on local machines.  You may access the API and Frontend on ports 5000 and 8080 respectively.
+
+## License
+
+Curacracy is licensed under the LGPL Version 3.
