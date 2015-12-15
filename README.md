@@ -25,6 +25,28 @@ Building is simple.  From CuracracyAPI and CuracracyFrontend, simply run `dnu re
 
 The API uses Sqlite on local machines.  You may access the API and Frontend on ports 5000 and 8080 respectively.
 
+## Current Status
+
+Presently the following is implemented:
+
+* Registration
+* Logging in
+* Token validation
+* Getting all users (paged)
+* Getting one user
+ 
+The following is yet to be implemented:
+
+* Permissions
+* Submissions
+* Editing a user
+* Folders
+* Communities
+* Groups
+
+See the issue tracker for details.
+
+
 ## License
 
 Curacracy is licensed under the LGPL Version 3.
