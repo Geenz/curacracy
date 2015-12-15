@@ -32,6 +32,20 @@ namespace CuracracyAPI.Models {
 	
 	public class UserResponse {
 		
+		public UserResponse() {
+			
+		}
+		
+		public UserResponse(int userId, string username, DateTime registrationDate, int rank, string description, long shoutThreadId, ICollection<Folder> rootFolders) {
+			this.userId = userId;
+			this.username = username;
+			this.registrationDate = registrationDate;
+			this.rank = rank;
+			this.description = description;
+			this.shoutThreadId = shoutThreadId;
+			this.rootFolders = rootFolders;
+		}
+		
 		public UserResponse(UserMeta metadata) {
 			this.userId = metadata.id;
 			this.username = metadata.userName;

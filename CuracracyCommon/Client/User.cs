@@ -57,12 +57,31 @@ namespace CuracracyAPI.Client {
                 formValues.Add(new KeyValuePair<string, string>("userid", token.userid.ToString()));
                 formValues.Add(new KeyValuePair<string, string>("token", token.token));
                 
+                var response = await client.PostAsync(BASE_URI + "api/v1/user/" + userid.ToString(), new FormUrlEncodedContent(formValues));
+                
+                if (response.IsSuccessStatusCode) {
+                    Stream receiveStream = await response.Content.ReadAsStreamAsync();
+                    StreamReader readStream = new StreamReader (receiveStream, Encoding.UTF8);
+                    string responseBody = await readStream.ReadToEndAsync();
+                    var u = JsonConvert.DeserializeObject<UserResponse>(responseBody);
+                    return u;
+                }
+            }
+            return null;
+		}
+        
+        public static async Task<UserResponse> GetUser(int userid) {
+			using (var client = new HttpClient()) {
+                client.DefaultRequestHeaders.Accept.Clear();
+                client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+                
                 var response = await client.GetAsync(BASE_URI + "api/v1/user/" + userid.ToString());
                 
                 if (response.IsSuccessStatusCode) {
                     Stream receiveStream = await response.Content.ReadAsStreamAsync();
                     StreamReader readStream = new StreamReader (receiveStream, Encoding.UTF8);
-                    var u = JsonConvert.DeserializeObject<UserResponse>(readStream.ReadToEnd());
+                    string responseBody = await readStream.ReadToEndAsync();
+                    var u = JsonConvert.DeserializeObject<UserResponse>(responseBody);
                     return u;
                 }
             }

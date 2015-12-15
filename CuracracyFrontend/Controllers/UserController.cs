@@ -18,6 +18,26 @@ namespace CuracracyFrontend.Controllers
     [Route("user")]
     public class UserController : BaseController
     {
+        [Route("{id}")]
+        public async Task<IActionResult> GetUser(int id) {
+            var log = await LoggedIn();
+            ViewData["LoggedIn"] = log.validated;
+            
+            int? suid = HttpContext.Session.GetInt32("userid");
+            string sid = HttpContext.Session.GetString("token");
+            
+            UserResponse user;
+            
+            if (suid.HasValue) {
+                user = await CuracracyAPI.Client.User.GetUser(id, new LoginResponse(sid, suid.Value));
+            } else {
+                user = await CuracracyAPI.Client.User.GetUser(id);
+            }
+            
+            ViewData["Username"] = user.username;
+            return View();
+        }
+        
         [Route("page/{pageNumber:int=0}")]
         public async Task<IActionResult> Index(int pageNumber) {
             var log = await LoggedIn();
