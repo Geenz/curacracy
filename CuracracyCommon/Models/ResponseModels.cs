@@ -4,14 +4,19 @@ using System.Collections.Generic;
 
 namespace CuracracyAPI.Models {
 	public class LoginResponse {
-		public LoginResponse(string session, int id) {
-			this.token = session;
-			this.userid = id;
+		public LoginResponse(string token, int userid) {
+			// We basically handle null as a failure case.  Something went wrong.
+			this.token = token;
+			this.userid = userid;
 		}
 		
 		public string token {get; set;}
 		
 		public int userid {get; set;}
+		
+		public override string ToString() {
+			return "userid: " + userid.ToString() + " token: " + token;
+		}
 	}
 	
 	public class ValidationResponse {

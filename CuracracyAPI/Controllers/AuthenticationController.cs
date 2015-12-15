@@ -90,7 +90,10 @@ namespace CuracracyAPI.Controllers {
 							
 							db.SaveChanges();
 							HttpContext.Response.StatusCode = 200;
-							return new LoginResponse(session);
+							
+							var l = new LoginResponse(session.sessionId, session.user.id);
+							Console.WriteLine("Authorizing with {0} and {1}", l.userid, l.token);
+							return l;
 						} else {
 							HttpContext.Response.StatusCode = 401;
 							throw new Exception("Password is incorrect!");

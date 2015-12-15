@@ -15,9 +15,9 @@ namespace CuracracyFrontend.Controllers
 {
     public class HomeController : BaseController
     {
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            var log = await LoggedIn();
+            var log = LoggedIn().Result;
             ViewData["LoggedIn"] = log.validated;
             return View();
         }
