@@ -1,5 +1,6 @@
 @using CuracracyAPI.Models;
 @{var user = (UserResponse)ViewData["Userdata"];
+ViewData["Title"] = user.username;
 <div class="user-container">
 	<h1>@user.username</h1>
 	<p>@user.description</p>

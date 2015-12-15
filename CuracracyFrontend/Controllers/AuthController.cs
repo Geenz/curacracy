@@ -17,6 +17,7 @@ namespace CuracracyFrontend.Controllers
 {
     public class AuthController : BaseController
     {
+        [Route("/logout")]
         public async Task<IActionResult> Logout() {
             // Session shouldn't be null, but just in case there's a case that I can't think of..
             if ((await LoggedIn()).validated) {
@@ -42,12 +43,14 @@ namespace CuracracyFrontend.Controllers
             return View();
         }
         
+        [Route("/login")]
         public async Task<IActionResult> Login() {
             ViewData["LoggedIn"] = (await LoggedIn()).validated;
             
             return View();
         }
         
+        [Route("/login")]
         [HttpPost]
         public async Task<IActionResult> Login([FromForm]string email, [FromForm]string password)
         {
@@ -65,6 +68,7 @@ namespace CuracracyFrontend.Controllers
             return View();
         }
         
+        [Route("/register")]
         public async Task<IActionResult> Register() {
             var log = await LoggedIn();
             if (log.validated) {
@@ -76,6 +80,7 @@ namespace CuracracyFrontend.Controllers
             return View();
         }
         
+        [Route("/register")]
         [HttpPost]
         public async Task<IActionResult> Register([FromForm]string email, [FromForm]string password, [FromForm]string username, [FromForm]string birthdate) {
             var log = await LoggedIn();
