@@ -15,6 +15,7 @@ namespace CuracracyFrontend.Controllers
 {
     public class HomeController : BaseController
     {
+        [Route("/")]
         public IActionResult Index()
         {
             var log = LoggedIn().Result;
@@ -22,6 +23,7 @@ namespace CuracracyFrontend.Controllers
             return View();
         }
 
+        [Route("/about")]
         public async Task<IActionResult> About()
         {
             var log = await LoggedIn();
@@ -31,6 +33,7 @@ namespace CuracracyFrontend.Controllers
             return View();
         }
 
+        [Route("/contact")]
         public async Task<IActionResult> Contact()
         {
             var log = await LoggedIn();
