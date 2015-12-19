@@ -78,7 +78,7 @@ namespace CuracracyAPI.Client {
             return null;
         }
         
-        public static async Task<GenericReponse> RegisterUserRequest(string username, string email, string password, DateTime birthdate) {
+        public static async Task<GenericResponse> RegisterUserRequest(string username, string email, string password, DateTime birthdate) {
             using (var client = new HttpClient()) {
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
@@ -94,7 +94,7 @@ namespace CuracracyAPI.Client {
                 if (response.IsSuccessStatusCode) {
                     Stream receiveStream = await response.Content.ReadAsStreamAsync();
                     StreamReader readStream = new StreamReader (receiveStream, Encoding.UTF8);
-                    GenericReponse t = JsonConvert.DeserializeObject<GenericReponse>(readStream.ReadToEnd());
+                    GenericResponse t = JsonConvert.DeserializeObject<GenericResponse>(readStream.ReadToEnd());
                     return t;
                 }
             }

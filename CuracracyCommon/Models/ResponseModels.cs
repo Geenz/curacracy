@@ -71,8 +71,8 @@ namespace CuracracyAPI.Models {
 		public ICollection<Folder> rootFolders;
 	}
 	
-	public class GenericReponse {
-		public GenericReponse(bool success, string message) {
+	public class GenericResponse {
+		public GenericResponse(bool success, string message) {
 			this.success = success;
 			this.message = message;
 		}
