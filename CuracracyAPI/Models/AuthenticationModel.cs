@@ -36,27 +36,4 @@ namespace CuracracyAPI.Models {
 		
 		public virtual UserMeta user {get; set;}
 	}
-	
-	public class LoginResponse {
-		public LoginResponse(string sessionId, int userId) {
-				// We basically handle null as a failure case.  Something went wrong.
-				this.token = sessionId;
-				this.userid = userId;
-		}
-		
-		public string token {get; set;}
-		
-		public int userid {get; set;}
-	}
-	
-	public class ValidationResponse {
-		public ValidationResponse(bool validated, string reason) {
-			this.validated = validated;
-			this.reason = reason;
-		}
-		
-		public bool validated {get; set;}
-		
-		public string reason {get; set;}
-	}
 }

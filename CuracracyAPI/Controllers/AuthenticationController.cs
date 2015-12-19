@@ -15,7 +15,7 @@ namespace CuracracyAPI.Controllers {
 		[Route("register")]
 		[Produces("application/json")]
 		[HttpPost]
-		public async Task<GenericReponse> Register([FromForm]string username, [FromForm] string email, [FromForm] string password, [FromForm] string birthdate) {
+		public async Task<GenericResponse> Register([FromForm]string username, [FromForm] string email, [FromForm] string password, [FromForm] string birthdate) {
 			string errorMessage = "";
 			try {
 				using (var db = new CuracracyContext()) {
@@ -43,7 +43,7 @@ namespace CuracracyAPI.Controllers {
 						
 						await db.SaveChangesAsync();
 						
-						return new GenericReponse(true, "Successfully created user.");
+						return new GenericResponse(true, "Successfully created user.");
 					} else {
 						throw new Exception("ERROR: A user using this email already exists!");
 					}
@@ -51,7 +51,7 @@ namespace CuracracyAPI.Controllers {
 			} catch (Exception e) {
 				errorMessage = e.ToString();
 			}
-			return new GenericReponse(false, errorMessage);
+			return new GenericResponse(false, errorMessage);
 		}
 			
 		[Route("login")]
