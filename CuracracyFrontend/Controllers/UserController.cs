@@ -33,10 +33,59 @@ namespace CuracracyFrontend.Controllers
             } else {
                 user = await CuracracyAPI.Client.User.GetUser(id);
             }
-            
-            user.description = "My awesome Curacracy account!";
-            
             ViewData["Userdata"] = user;
+            return View();
+        }
+        
+        [Route("{id}/update")]
+        [HttpGet]
+        public async Task<IActionResult> EditUser(int id) {
+            var log = await LoggedIn();
+            ViewData["LoggedIn"] = log.validated;
+            
+            int? suid = HttpContext.Session.GetInt32("userid");
+            string sid = HttpContext.Session.GetString("token");
+            
+            GenericResponse response;
+            
+            var user = await CuracracyAPI.Client.User.GetUser(id);
+            
+            if (!suid.HasValue) {
+                response = new GenericResponse(false, "Unauthorized!");
+            } else {
+                response = new GenericResponse(true, "");
+            }
+            
+            ViewData["Message"] = response.message;
+            ViewData["Userdata"] = user;
+            return View();
+        }
+        
+        [Route("{id}/update")]
+        [HttpPost]
+        public async Task<IActionResult> EditUser(int id, [FromForm]string username, [FromForm]string description) {
+            var log = await LoggedIn();
+            ViewData["LoggedIn"] = log.validated;
+            
+            int? suid = HttpContext.Session.GetInt32("userid");
+            string sid = HttpContext.Session.GetString("token");
+            
+            GenericResponse response;
+            UserResponse user = null;
+            if (suid.HasValue) {
+                user = await CuracracyAPI.Client.User.GetUser(id, new LoginResponse(sid, suid.Value));
+                user.username = username;
+                user.description = description;
+                response = await CuracracyAPI.Client.User.UpdateUser(user, new LoginResponse(sid, suid.Value));
+                Console.WriteLine("Redirecting.");
+                HttpContext.Response.Redirect("/user/" + id.ToString());
+            } else {
+                response = new GenericResponse(false, "Unauthorized!");
+            }
+            
+            ViewData["Message"] = response.message;
+            ViewData["Userdata"] = user;
+            
             return View();
         }
         

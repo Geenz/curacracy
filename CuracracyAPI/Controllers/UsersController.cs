@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
 using Microsoft.Data.Entity;
 using CuracracyAPI.Models;
+using Newtonsoft.Json;
 
 namespace CuracracyAPI.Controllers {
 	[Route("api/v1/[controller]")]
@@ -120,32 +121,37 @@ namespace CuracracyAPI.Controllers {
 		
 		[Route("{id}/update")]
 		[HttpPost]
-		public async Task<UserResponse> UpdateUser(int id, [FromForm]string token, [FromForm]int userid, [FromForm]UserResponse userData) {
+		public async Task<UserResponse> UpdateUser(int id, [FromForm]string userdata) {
 			string errorMessage = "";
+            UserRequest ur = JsonConvert.DeserializeObject<UserRequest>(userdata);
+            
 			try {
 				using (var db = new CuracracyContext()) {
 					// First, validate the user token.
-					ValidationResponse v = AuthenticationController.ValidateSession(token, userid);
+					ValidationResponse v = AuthenticationController.ValidateSession(ur.authtoken, ur.authid);
 					if (v.validated) {
 						// Next, update our user data.
 						var userQuery = db.UserMetadata.Where(u=> u.id == id).Include(u=> u.userdata).Include(f=> f.userdata.galleryFolder.children);
 						
 						UserMeta user = userQuery.First();
 						
-						user.userName = userData.username;
-						user.userdata.description = userData.description;
+						user.userName = ur.username;
+						user.userdata.description = ur.description;
 						
 						await db.SaveChangesAsync();
 						
 						if (user != null) {
+                            HttpContext.Response.StatusCode = 204;
 							return new UserResponse(user);
 						} else {
+                            HttpContext.Response.StatusCode = 404;
 							throw new Exception("User not found!");
 						}
 					}
 				}
 			} catch (Exception e) {
 				errorMessage = e.ToString();
+                HttpContext.Response.StatusCode = 500;
 			}
 			return null;
 		}

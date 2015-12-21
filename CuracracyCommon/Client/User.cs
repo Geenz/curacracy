@@ -92,11 +92,11 @@ namespace CuracracyAPI.Client {
             using (var client = new HttpClient()) {
                 client.DefaultRequestHeaders.Accept.Clear();
                 client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-                
+                UserRequest ur = new UserRequest(user);
+                ur.authtoken = token.token;
+                ur.authid = token.userid;
                 var formValues = new List<KeyValuePair<string, string>>();
-                formValues.Add(new KeyValuePair<string, string>("userid", token.userid.ToString()));
-                formValues.Add(new KeyValuePair<string, string>("token", token.token));
-                formValues.Add(new KeyValuePair<string, string>("userData", JsonConvert.SerializeObject(user)));
+                formValues.Add(new KeyValuePair<string, string>("userdata", JsonConvert.SerializeObject(ur)));
                 
                 var response = await client.PostAsync(BASE_URI + "api/v1/user/" + user.userId.ToString() + "/update", new FormUrlEncodedContent(formValues));
                 

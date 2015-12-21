@@ -87,10 +87,10 @@ namespace CuracracyFrontend.Controllers
             if (log.validated) {
                 ViewData["LoggedIn"] = true;
             } else {
-                GenericReponse g = await Authentication.RegisterUserRequest(username, email, password, DateTime.Now);
+                GenericResponse g = await Authentication.RegisterUserRequest(username, email, password, DateTime.Now);
                 
                 if (g != null) {
-                    HttpContext.Response.Redirect("/Auth/Login");
+                    HttpContext.Response.Redirect("/login");
                     ViewData["LoggedIn"] = false;
                 } else {
                     ViewData["Message"] = "Error: User already exists!";
